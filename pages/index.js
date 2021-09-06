@@ -1,8 +1,21 @@
 import styles from '../styles/Home.module.css'
 import {useEffect, useState} from 'react'
-import {createGuest} from'cross-domain-storage/guest'
+import { CrossStorageClient } from 'cross-storage/lib/index'
+
 
 export default function Home() {
+
+  const[storage, setStorage] = useState(true);
+
+  useEffect(() => {
+    // const storage = new CrossStorageClient('http://localhost:3000/');
+    const storage = new CrossStorageClient('https://xvercel.ml/');
+    storage.onConnect()
+    .then(() => storage.get('cart'))
+    .then(res => console.log("testing", res))
+    .catch(err => console.log(err));
+  }, [storage])
+
 
   return (
     <div className={styles.container}>
@@ -10,43 +23,8 @@ export default function Home() {
         <h1 className={styles.title}>
           Welcome to <a href="https://nextjs.org">Next.js!</a>
         </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
+        <button onClick={() => setStorage(!storage)}>Get Latest Values</button>
       </main>
-
       <footer className={styles.footer}>
         <a
           href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
